@@ -1,3 +1,14 @@
+gcs (0.3.17) jaunty; urgency=low
+
+  * Moved he changelog version from hardy to jaunty
+  * Updated the debhelper version and the compatibility in templetes
+  * Changed architecture to all because actually this is for metapackages and nothing is going to be compiled in it
+  * Updated the year for the copyright
+  * Updated Guadalinex version on the skel
+  * TODO file added
+
+ -- Juanje Ojeda Croissier <jojeda@emergya.es>  Thu, 12 Mar 2009 22:06:49 +0100
+
 gcs (0.3.16) hardy; urgency=low
 
   * Changed the version style to v[Guadalinex version].
