@@ -2,14 +2,23 @@ Source: gcs
 Section: admin
 Priority: optional
 Maintainer: Junta de Andalucia <packmaster@guadalinex.org>
-Build-Depends: debhelper (>> 3.0.0)
-Standards-Version: 3.7.3
+Uploaders: Juanje Ojeda Croissier <jojeda@emergya.es>
+Build-Depends: debhelper (>= 7.0)
+Standards-Version: 3.8.0
+Homepage: http://launchpad.net/gcs
+Vcs-Browser: http://codebrowse.launchpad.net/~guadalinex-members/gcs/trunk/changes
+Vcs-Bzr: http://bazaar.launchpad.net/~guadalinex-members/gcs/trunk
 
 Package: gcs
 Architecture: i386
-Pre-Depends: 
 Depends: python, python-syck, python-support, debhelper, devscripts, make, fakeroot, gcc
-Conflicts: 
-Description: Sistema de configuración de Guadalinex v4 
- Consiste en un conjunto de herramientas que facilitan
- la creacion de metapaquetes y paquetes de configuración.
+Description: Guadalinex Configuration System
+ gcs (Guadalinex Configuration System) is a system which was originally created
+ to generate plane metapackages (just dependences) and configuration 
+ metapackages (which add or change other packages' configurations in the best 
+ Debian package way possible).
+ .
+ The system uses a very simple skeleton of files.
+ Although it was designed for creating and maintaining metapackages, it's
+ possible to create a Debian package for a new project very easy and then keep
+ working with the Debian package source.
