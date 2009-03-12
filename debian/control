@@ -11,9 +11,7 @@ Vcs-Bzr: http://bazaar.launchpad.net/~guadalinex-members/gcs/trunk
 
 Package: gcs
 Architecture: i386
-Pre-Depends: 
 Depends: python, python-syck, python-support, debhelper, devscripts, make, fakeroot, gcc
-Conflicts: 
-Description: Sistema de configuración de Guadalinex v4 
+Description: Sistema de configuración de Guadalinex 
  Consiste en un conjunto de herramientas que facilitan
  la creacion de metapaquetes y paquetes de configuración.
