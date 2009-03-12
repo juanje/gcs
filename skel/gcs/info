@@ -1,5 +1,5 @@
 # YAML 1.1
-# Fichero de configuración de paquetes de personalización de Guadalinex v4
+# Fichero de configuración de paquetes de personalización de Guadalinex v6
 
 # Nombre del paquete (minúsculas-separado-con-guiones)
 name: nombre-del-paquete
@@ -20,7 +20,7 @@ shortdesc: "descripción corta"
 longdesc: "descripción larga\n linea1\n linea2"
 
 # Versión del paquete
-version: v5
+version: v6
 
 # Cambios en esta versión
 changes:
