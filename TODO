@@ -1,0 +1,5 @@
+ * Add <AUTHOR> token to the copyright template
+ * Removed execution permission to the templates and give them to the post and pre scripts
+ * Added the Architecture field to the info file
+ * Checking the best way to put the versions
+ * See how get the changelog from the svn log instead of from the info (which usually doesn't change
