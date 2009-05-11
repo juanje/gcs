@@ -1,3 +1,10 @@
+gcs (0.3.18) jaunty; urgency=low
+
+  * Fixed the copy of links which need to be pointing to file that doesn't
+    exist yet. Like relative links on /etc/skel.
+
+ -- Juanje Ojeda Croissier <jojeda@emergya.es>  Mon, 11 May 2009 17:12:58 +0200
+
 gcs (0.3.17) jaunty; urgency=low
 
   * Moved he changelog version from hardy to jaunty
