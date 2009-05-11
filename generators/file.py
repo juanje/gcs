@@ -152,6 +152,7 @@ class RulesGenerator(FileGenerator):
 
     def __init__(self):
         self.dhinstall_list = []
+        self.copy_list = []
         self.dirs = []
         FileGenerator.__init__(self)
 
@@ -205,6 +206,9 @@ class RulesGenerator(FileGenerator):
                         os.path.isfile(orig_path):
                     dest_path = os.path.dirname(dest_path)
                     self.__add_dhinstall(orig_path, dest_path)
+                elif os.path.islink(orig_path):
+                    dest_path = os.path.dirname(dest_path)
+                    self.__add_copy(orig_path, dest_path)
 
         os.path.walk(config['source_path'] + '/gcs/' + skel_name, 
                 set_dhinstall, None)
@@ -212,8 +216,10 @@ class RulesGenerator(FileGenerator):
 
     def __write_rules_file(self):
         dhinstall_content = '\n'.join(self.dhinstall_list)
+        copy_content = '\n'.join(self.copy_list)
+        commands_content = '\n'.join([dhinstall_content, copy_content])
         newcontent = self.template_content.replace('<DHINSTALL_SLOT>', 
-                dhinstall_content)
+                commands_content)
         self.template_content = newcontent
 
         self._write_file('debian/rules')
@@ -240,6 +246,21 @@ class RulesGenerator(FileGenerator):
 
         if command:
             self.dhinstall_list.append(command)
+
+
+    def __add_copy(self, orig_path, dest_path):
+        if not dest_path:
+            return
+        #dest_path = os.path.dirname(dest_path)
+        command = ''
+	    # If we aren't working with config files or we are working with them but has the appropiate
+	    # extension fill the command
+        if not ('gcs/conffiles_skel/' in orig_path) or orig_path.endswith(config['config_extension']):
+            dest_path = os.path.join('debian', config['info']['name'], dest_path)
+            command = '\tcp -d "%s" "%s"' % (orig_path, dest_path)
+
+        if command:
+            self.copy_list.append(command)
 
 
 
