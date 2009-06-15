@@ -7,6 +7,7 @@ Standards-Version: 3.8.0
 
 Package: <NAME>
 Architecture: all
+Replaces: <REPLACES>
 Pre-Depends: <PREDEPENDS>
 Depends: <DEPENDS>
 Conflicts: <CONFLICTS>
