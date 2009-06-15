@@ -65,6 +65,7 @@ class ControlGenerator(FileGenerator):
         self.__set_predepends()
         self.__set_depends()
         self.__set_conflicts()
+        self.__set_replaces()
         self.__set_section()
         self.__set_priority()
         self.__set_descriptions()
@@ -98,6 +99,12 @@ class ControlGenerator(FileGenerator):
     def __set_conflicts(self):
         conflicts = self.__parse_deps('/gcs/conflicts')
         newcontent = self.template_content.replace('<CONFLICTS>', conflicts)
+        self.template_content = newcontent
+
+
+    def __set_replaces(self):
+        replaces = self.__parse_deps('/gcs/replaces')
+        newcontent = self.template_content.replace('<REPLACES>', replaces)
         self.template_content = newcontent
 
 
