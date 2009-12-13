@@ -10,7 +10,7 @@ Vcs-Browser: http://codebrowse.launchpad.net/~guadalinex-members/gcs/trunk/chang
 Vcs-Bzr: http://bazaar.launchpad.net/~guadalinex-members/gcs/trunk
 
 Package: gcs
-Architecture: i386
+Architecture: all
 Depends: python, python-syck, python-support, debhelper, devscripts, make, fakeroot, gcc
 Description: Guadalinex Configuration System
  gcs (Guadalinex Configuration System) is a system which was originally created
