@@ -11,8 +11,9 @@ gcs (0.3.20+siniestro1) UNRELEASED; urgency=low
     useful to use other build methods like pbuilder.
   * Created <DISTRIB> tag with the codename of the parent distribution for the changelog
     template.
+  * Added support for <AUTHOR> tag in copyright template.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 14:08:41 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 14:09:25 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 

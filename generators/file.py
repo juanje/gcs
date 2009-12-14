@@ -470,4 +470,15 @@ class CopyrightGenerator(FileGenerator):
 
     def activate(self):
         self.set_template_content('copyright_template')
+
+        self.__set_author()
+
         self._write_file('debian/copyright')
+
+
+    def __set_author(self):
+        from datetime import date
+        today = date.today()
+        author = "Copyright %s, %s" % (today.year, config['info']['author'])
+        newcontent = self.template_content.replace('<AUTHOR>', author)
+        self.template_content = newcontent
