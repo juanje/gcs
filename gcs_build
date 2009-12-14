@@ -7,8 +7,23 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 sys.path.insert(0, '/usr/share/gcs/')
 
+from optparse import OptionParser
 from builder import Builder
 
 if __name__ == "__main__":
+    parser = OptionParser()
+
+    parser.add_option('-b', '--build',
+            dest="build",
+            action="store_true",
+            help="debuild generated sources"
+            )
+    parser.set_defaults(build=False)
+
+    (options, args) = parser.parse_args()
+
     builder = Builder(os.getcwd())
     builder.make_package()
+
+    if options.build:
+        print builder.build_package()

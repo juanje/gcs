@@ -51,7 +51,14 @@ class Builder(object):
         CompatGenerator().activate()
         CopyrightGenerator().activate()
 
-        os.system('debuild -us -uc')
+
+    def build_package(self):
+        """ Build the package. Use a simply debuild for this propouse.
+        """
+        try:
+            os.system('debuild -us -uc')
+        except:
+            pass
 
 
     def __prepare_conffiles(self):
