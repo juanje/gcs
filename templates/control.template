@@ -11,6 +11,8 @@ Provides: <PROVIDES>
 Replaces: <REPLACES>
 Pre-Depends: <PREDEPENDS>
 Depends: <DEPENDS>
+Recommends: <RECOMMENDS>
+Suggests: <SUGGESTS>
 Conflicts: <CONFLICTS>
 Description: <SHORTDESC> 
  <LONGDESC>

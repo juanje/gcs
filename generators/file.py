@@ -65,6 +65,8 @@ class ControlGenerator(FileGenerator):
         self.__set_predepends()
         self.__set_provides()
         self.__set_depends()
+        self.__set_recommends()
+        self.__set_suggests()
         self.__set_conflicts()
         self.__set_replaces()
         self.__set_section()
@@ -94,6 +96,18 @@ class ControlGenerator(FileGenerator):
     def __set_depends(self):
         depends = self.__parse_deps('/gcs/depends')
         newcontent = self.template_content.replace('<DEPENDS>', depends)
+        self.template_content = newcontent
+
+
+    def __set_recommends(self):
+        recommends = self.__parse_deps('/gcs/recommends')
+        newcontent = self.template_content.replace('<RECOMMENDS>', recommends)
+        self.template_content = newcontent
+
+
+    def __set_suggests(self):
+        suggests = self.__parse_deps('/gcs/suggests')
+        newcontent = self.template_content.replace('<SUGGESTS>', suggests)
         self.template_content = newcontent
 
 
