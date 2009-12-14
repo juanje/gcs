@@ -12,8 +12,9 @@ gcs (0.3.20+siniestro1) UNRELEASED; urgency=low
   * Created <DISTRIB> tag with the codename of the parent distribution for the changelog
     template.
   * Added support for <AUTHOR> tag in copyright template.
+  * Deleted some old stuff.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 14:09:25 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 19:45:56 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 
