@@ -4,8 +4,10 @@ gcs (0.3.20+siniestro1) UNRELEASED; urgency=low
   * Added preremoval script to delete all remaining pyc files for a clean uninstall.
   * Added support for Recommends and Suggests control fields.
     process is no longer necesary.
+  * Modified dh_install command to add the 'config_extension' directly. The preparation
+    process is no longer necesary.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 13:13:58 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 13:14:38 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 

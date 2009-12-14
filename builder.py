@@ -40,8 +40,6 @@ class Builder(object):
         except:
             pass
 
-        self.__prepare_conffiles()
-
         ControlGenerator().activate()
         RulesGenerator().activate()
         ChangelogGenerator().activate()
@@ -54,10 +52,6 @@ class Builder(object):
         CopyrightGenerator().activate()
 
         os.system('debuild -us -uc')
-
-        self.__delete_tmpfiles()
-
-
 
 
     def __prepare_conffiles(self):
