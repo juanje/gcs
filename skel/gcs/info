@@ -11,7 +11,7 @@ author: nombre del autor <usuario@dominio.com>
 priority: optional
 
 # Section
-section: seccion de la aplicacion
+section: seccion_de_la_aplicacion
 
 # Descripción corta
 shortdesc: "descripción corta"

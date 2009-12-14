@@ -14,8 +14,10 @@ gcs (0.3.20+siniestro1) UNRELEASED; urgency=low
   * Added support for <AUTHOR> tag in copyright template.
   * Deleted some old stuff.
   * Replaced python-syck dependence by a newer python-yaml.
+  * The example section in the info file of the skeleton by default couldn't have multiple
+    words.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 19:48:44 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 19:50:51 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 
