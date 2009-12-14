@@ -6,8 +6,9 @@ gcs (0.3.20+siniestro1) UNRELEASED; urgency=low
     process is no longer necesary.
   * Modified dh_install command to add the 'config_extension' directly. The preparation
     process is no longer necesary.
+  * Changed default config_extension to .gcs
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 13:14:38 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 13:16:41 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 

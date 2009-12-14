@@ -2,7 +2,7 @@
 
 
 dpkg-divert --package gcs-test-pkg --rename --quiet --add /etc/lsb-release
-ln -s /etc/lsb-release.gv4 /etc/lsb-release
+ln -s /etc/lsb-release.gcs /etc/lsb-release
 
 
 

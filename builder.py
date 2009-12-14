@@ -55,7 +55,7 @@ class Builder(object):
 
 
     def __prepare_conffiles(self):
-        """ Add .gv4 extension at all conffiles (making a copy)
+        """ Add .gcs extension at all conffiles (making a copy)
         """
         def copy_file(arg, dirname, file_names):
 
@@ -73,7 +73,7 @@ class Builder(object):
 
 
     def __delete_tmpfiles(self):
-        """ Add .gv4 extension at all conffiles (making a copy)
+        """ Add .gcs extension at all conffiles (making a copy)
         """
         def delete_file(arg, dirname, file_names):
 
