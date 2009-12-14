@@ -5,7 +5,7 @@ import os
 import os.path
 import shutil
 
-import syck
+import yaml
 
 from config import config
 from generators.file import ControlGenerator
@@ -26,7 +26,7 @@ class Builder(object):
 
     def __init__(self, path):
         config['source_path'] = path
-        config['info'] = syck.load(open(path + '/gcs/info').read())
+        config['info'] = yaml.load(open(path + '/gcs/info').read())
         extension = config['info'].get('config_extension', None)
         if extension:
             config['config_extension'] = extension

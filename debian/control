@@ -11,7 +11,7 @@ Vcs-Bzr: http://bazaar.launchpad.net/~guadalinex-members/gcs/trunk
 
 Package: gcs
 Architecture: all
-Depends: python, python-syck, python-support, debhelper, devscripts, make, fakeroot, gcc
+Depends: python, python-yaml, python-support, debhelper, devscripts, make, fakeroot, gcc
 Description: Guadalinex Configuration System
  gcs (Guadalinex Configuration System) is a system which was originally created
  to generate plane metapackages (just dependences) and configuration 

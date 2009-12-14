@@ -5,10 +5,10 @@
 
 import sys
 
-import syck
+import yaml
 
 try:
-    config = syck.load(open('/etc/gcs.conf').read())
+    config = yaml.load(open('/etc/gcs.conf').read())
 
     # Add default options
     config['source_path'] = './'
