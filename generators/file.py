@@ -321,6 +321,8 @@ class ChangelogGenerator(FileGenerator):
                 info['name'])
         newcontent = newcontent.replace('<VERSION>', 
                 str(info['version']))
+        newcontent = newcontent.replace('<DISTRIB>', 
+                os.popen('lsb_release -cs').read()[:-1])
         newcontent = newcontent.replace('<AUTHOR>', 
                 info['author'])
         newcontent = newcontent.replace('<DATE>',

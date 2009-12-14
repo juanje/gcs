@@ -9,8 +9,10 @@ gcs (0.3.20+siniestro1) UNRELEASED; urgency=low
   * Changed default config_extension to .gcs
   * Established package building as an option to focus on creating debian sources. Its
     useful to use other build methods like pbuilder.
+  * Created <DISTRIB> tag with the codename of the parent distribution for the changelog
+    template.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 13:49:10 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 14:08:41 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 
