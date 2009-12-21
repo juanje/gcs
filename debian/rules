@@ -10,7 +10,7 @@ clean:
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 
 	dh_install  "builder.py" "/usr/share/gcs"
 	dh_install  "config.py" "/usr/share/gcs"
@@ -22,9 +22,7 @@ install: build
 	dh_install  "gcs_skel" "/usr/bin"
 	dh_install  "gcs.conf" "/etc"
 
-binary-indep:  build install
-
-binary-arch: build install
+binary-indep: build install
 	dh_testdir
 	dh_testroot
 	dh_installdebconf
@@ -39,7 +37,10 @@ binary-arch: build install
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
+	dh_md5sums
 	dh_builddeb
+
+binary-arch: build install
 
 binary: binary-indep binary-arch
 

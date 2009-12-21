@@ -3,14 +3,14 @@ Section: <SECTION>
 Priority: <PRIORITY>
 Maintainer: <MANTAINER>
 Build-Depends: debhelper (>= 7.0)
-Standards-Version: 3.8.0
+Standards-Version: 3.8.3
 
 Package: <NAME>
 Architecture: all
 Provides: <PROVIDES>
 Replaces: <REPLACES>
 Pre-Depends: <PREDEPENDS>
-Depends: <DEPENDS>
+Depends: ${misc:Depends}, <DEPENDS>
 Recommends: <RECOMMENDS>
 Suggests: <SUGGESTS>
 Conflicts: <CONFLICTS>

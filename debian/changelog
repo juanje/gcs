@@ -1,23 +1,26 @@
-gcs (0.3.20+siniestro1) UNRELEASED; urgency=low
+gcs (0.3.20+nmu1) UNRELEASED; urgency=low
 
+  * Non-maintainer upload.
   * Added support for all architectures.
-  * Added preremoval script to delete all remaining pyc files for a clean uninstall.
+  * Added preremoval script to delete all remaining pyc files for a clean
+    uninstall.
   * Added support for Recommends and Suggests control fields.
-    process is no longer necesary.
-  * Modified dh_install command to add the 'config_extension' directly. The preparation
-    process is no longer necesary.
+  * Modified dh_install command to add the 'config_extension' directly. The
+    preparation process is no longer necessary.
   * Changed default config_extension to .gcs
-  * Established package building as an option to focus on creating debian sources. Its
-    useful to use other build methods like pbuilder.
-  * Created <DISTRIB> tag with the codename of the parent distribution for the changelog
-    template.
+  * Established package building as an option to focus on creating debian
+    sources. Its useful to use other build methods like pbuilder.
+  * Created <DISTRIB> tag with the codename of the parent distribution for the
+    changelog template.
   * Added support for <AUTHOR> tag in copyright template.
   * Deleted some old stuff.
   * Replaced python-syck dependence by a newer python-yaml.
-  * The example section in the info file of the skeleton by default couldn't have multiple
-    words.
+  * The example section in the info file of the skeleton by default couldn't
+    have multiple words.
+  * Fixed almost all lintian warnings coming from this debian package and the
+    debian templates for gcs.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 14 Dec 2009 19:50:51 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 21 Dec 2009 12:06:07 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 
