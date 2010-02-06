@@ -13,17 +13,15 @@ from builder import Builder
 if __name__ == "__main__":
     parser = OptionParser()
 
-    parser.add_option('-b', '--build',
-            dest="build",
+    parser.add_option('-S', '--sources',
+            dest="sources",
             action="store_true",
-            help="debuild generated sources"
+            help="debian source only, no binary files"
             )
-    parser.set_defaults(build=False)
-
     (options, args) = parser.parse_args()
 
     builder = Builder(os.getcwd())
     builder.make_package()
 
-    if options.build:
-        print builder.build_package()
+    if not options.sources:
+        builder.build_package()

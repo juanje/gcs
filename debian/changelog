@@ -7,8 +7,8 @@ gcs (0.3.20+nmu1) UNRELEASED; urgency=low
   * Added support for Recommends and Suggests control fields.
     preparation process is no longer necessary.
   * Changed default config_extension to .gcs
-  * Established package building as an option to focus on creating debian
-    sources. Its useful to use other build methods like pbuilder.
+  * Added an option parameter for gcs_build to don't build the Debian source
+    generated. It's useful to build it later.
   * Created <DISTRIB> tag with the codename of the parent distribution for the
     changelog template.
   * Added support for <AUTHOR> tag in copyright template.
@@ -21,7 +21,7 @@ gcs (0.3.20+nmu1) UNRELEASED; urgency=low
   * Added feature to change the base directory of diverted files. Useful for a
     run-parts style of directory. [config: diverts_basepath]
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 06 Feb 2010 13:35:14 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 06 Feb 2010 20:23:41 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 
