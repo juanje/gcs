@@ -233,6 +233,8 @@ class RulesGenerator(FileGenerator):
                 if (not '/.svn' in orig_path) and\
                         os.path.isfile(orig_path):
                     dest_path = os.path.dirname(dest_path)
+                    if skel_name == "conffiles_skel":
+                        dest_path = os.path.join(config['diverts_basepath'], dest_path)
                     self.__add_dhinstall(orig_path, dest_path)
                 elif os.path.islink(orig_path):
                     dest_path = os.path.dirname(dest_path)

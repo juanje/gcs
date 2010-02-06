@@ -60,17 +60,6 @@ class DivertPart(Part):
                         abs_path.endswith(extension):
                     divert_method(dest_path)
 
-                desktop_extension = 'desktop' + extension
-                if fname.endswith(desktop_extension):
-                    if divert_method == self.__add_divert:
-                        real_conf_path = dest_path[: -len(extension)]
-                        command = "rm %s\n" % real_conf_path
-                        command += "cp %s %s\n\n" % (dest_path, real_conf_path)
-                        self.diverts.append(command)
-
-                    elif divert_method == self.__rm_divert:
-                        pass
-
         os.path.walk(config['source_path'] + '/gcs/conffiles_skel', 
                 set_divert, None)
                     
@@ -85,10 +74,11 @@ class DivertPart(Part):
         pkg_name = config['info']['name']
         divert_command = '[ "%s" != "$(dpkg-divert --truename %s)" ] && rm -f %s && dpkg-divert --rename --remove %s\n' % (real_conf_path, real_conf_path, real_conf_path, real_conf_path)
 
-        divert_command += "dpkg-divert --package %s --rename " % pkg_name
-        divert_command += "--quiet --add %s\n" % real_conf_path
+        divert_command += "dpkg-divert --package %s " % pkg_name
+        divert_command += "--divert %s.distrib " % os.path.join(config['diverts_basepath'], real_conf_path[1:])
+        divert_command += "--rename --quiet --add %s\n\n" % real_conf_path
 
-        divert_command += "ln -fs %s %s\n\n" % (dest_path, real_conf_path)
+        divert_command += "ln -fs %s %s\n\n" % (os.path.join(divert_directory, dest_path[1:]), real_conf_path)
 
         self.diverts.append(divert_command)
 

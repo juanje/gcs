@@ -18,8 +18,10 @@ gcs (0.3.20+nmu1) UNRELEASED; urgency=low
     have multiple words.
   * Fixed almost all lintian warnings coming from this debian package and the
     debian templates for gcs.
+  * Added feature to change the base directory of diverted files. Useful for a
+    run-parts style of directory. [config: diverts_basepath]
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 06 Feb 2010 02:57:24 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 06 Feb 2010 13:35:14 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 

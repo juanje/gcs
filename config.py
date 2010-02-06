@@ -13,6 +13,8 @@ try:
     # Add default options
     config['source_path'] = './'
     config['info'] = {}
+    if not config.has_key('diverts_basepath'):
+        config['diverts_basepath'] = '/'
     
 except:
     print "Can't read /etc/gcs.conf file."
