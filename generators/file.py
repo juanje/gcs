@@ -40,10 +40,11 @@ class FileGenerator(object):
 
 
     
-    def _write_file(self, path):
+    def _write_file(self, path, mode=0644):
         real_file = open(config['source_path'] + '/' + path, 'w')
         real_file.write(self.template_content)
         real_file.close()
+        os.chmod(config['source_path'] + '/' + path, mode)
 
 
 class ControlGenerator(FileGenerator):
@@ -252,8 +253,7 @@ class RulesGenerator(FileGenerator):
                 commands_content)
         self.template_content = newcontent
 
-        self._write_file('debian/rules')
-        os.chmod(config['source_path'] + '/' + 'debian/rules', 0755)
+        self._write_file('debian/rules', 0755)
 
         # write debian/dirs file
         dirs_file = open(config['source_path'] + '/debian/dirs', 'w')
@@ -396,7 +396,7 @@ class PrePostGenerator(FileGenerator):
         self._set_install_scripts()
 
         if initial_content != self.template_content:
-            self._write_file(self.file_path)
+            self._write_file(self.file_path, 0755)
         else:
             try:
                 os.remove(config['source_path'] + '/' + self.file_path)
