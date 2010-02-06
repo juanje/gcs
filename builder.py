@@ -40,6 +40,8 @@ class Builder(object):
         except:
             pass
 
+        self.__prepare_conffiles()
+
         ControlGenerator().activate()
         RulesGenerator().activate()
         ChangelogGenerator().activate()
@@ -50,6 +52,12 @@ class Builder(object):
         PostRmGenerator().activate()
         CompatGenerator().activate()
         CopyrightGenerator().activate()
+
+        # FIXME: At the moment we need to keep the configuration files because
+        # the conversion doesn't transparently (dh_install rename problem)
+        #self.__delete_tmpfiles()
+
+
 
 
     def build_package(self):

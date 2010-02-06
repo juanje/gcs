@@ -5,7 +5,6 @@ gcs (0.3.20+nmu1) UNRELEASED; urgency=low
   * Added preremoval script to delete all remaining pyc files for a clean
     uninstall.
   * Added support for Recommends and Suggests control fields.
-  * Modified dh_install command to add the 'config_extension' directly. The
     preparation process is no longer necessary.
   * Changed default config_extension to .gcs
   * Established package building as an option to focus on creating debian
@@ -20,7 +19,7 @@ gcs (0.3.20+nmu1) UNRELEASED; urgency=low
   * Fixed almost all lintian warnings coming from this debian package and the
     debian templates for gcs.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 21 Dec 2009 12:06:07 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 06 Feb 2010 02:57:24 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 
