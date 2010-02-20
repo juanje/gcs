@@ -1,6 +1,5 @@
-gcs (0.3.20+nmu1) UNRELEASED; urgency=low
+gcs (0.3.20+ehbello1) karmic; urgency=low
 
-  * Non-maintainer upload.
   * Added support for all architectures.
   * Added preremoval script to delete all remaining pyc files for a clean
     uninstall.
@@ -23,7 +22,7 @@ gcs (0.3.20+nmu1) UNRELEASED; urgency=low
   * Removed execution permission to the templates and gave them later to the
     post and pre scripts
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 06 Feb 2010 21:31:35 +0000
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 20 Feb 2010 14:25:20 +0000
 
 gcs (0.3.20) jaunty; urgency=low
 
