@@ -78,7 +78,7 @@ class DivertPart(Part):
         divert_command += "--divert %s.distrib " % os.path.join(config['diverts_basepath'], real_conf_path[1:])
         divert_command += "--rename --quiet --add %s\n\n" % real_conf_path
 
-        divert_command += "ln -fs %s %s\n\n" % (os.path.join(divert_directory, dest_path[1:]), real_conf_path)
+        divert_command += "ln -fs %s %s\n\n" % (os.path.join(config['diverts_basepath'], dest_path[1:]), real_conf_path)
 
         self.diverts.append(divert_command)
 
