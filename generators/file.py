@@ -163,7 +163,8 @@ class ControlGenerator(FileGenerator):
 
             depend_string = name_and_version[0]
             if len(name_and_version) == 2:
-                depend_string += " (%s)" %(name_and_version[1])
+                version = name_and_version[1].lstrip("(").rstrip(")")
+                depend_string += " (%s)" % version
 
             new_depends.append(depend_string)
 

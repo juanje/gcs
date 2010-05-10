@@ -18,10 +18,15 @@ La plantilla que se deberá rellenar es en realidad un conjunto de directorios y
 
   * Fichero //changelog//. Contendrá los cambios realizados por las distintas versiones. Se genera automáticamente. No se debería tocar.
 
+  * Fichero //provides//. Describe los paquetes virtuales o no virtuales que este paquete proporciona.
+
   * Fichero //depends//. Contendrá las dependencias de nuestro paquete.
 
   * Fichero //predepends//. Contendrá las pre-dependencias de nuestro paquete.
 
+  * Fichero //recommends//. Contendrá las recomendaciones de nuestro paquete.
+  
+  * Fichero //suggests//. Contendrá las sugerencias de nuestro paquete.
 
 La sintaxis de cada fichero y una información más detallada están incluidos en cada uno de ellos.
 
