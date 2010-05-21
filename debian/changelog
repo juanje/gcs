@@ -2,8 +2,9 @@ gcs (0.3.20+ehbello2) UNRELEASED; urgency=low
 
   * Allows reading package lists with brackets in their versions, e.g.:
     gcs (> 0.3.20)
+  * Fixed bug when divert a file due to a variable not defined.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 10 May 2010 12:19:31 +0100
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Mon, 10 May 2010 13:21:53 +0100
 
 gcs (0.3.20+ehbello1) karmic; urgency=low
 
