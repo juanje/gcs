@@ -254,14 +254,17 @@ class RulesGenerator(FileGenerator):
 
 
     def __write_rules_file(self):
-        dhinstall_content = '\n'.join(self.dhinstall_list)
         copy_content = '\n'.join(self.copy_list)
-        commands_content = '\n'.join([dhinstall_content, copy_content])
         newcontent = self.template_content.replace('<DHINSTALL_SLOT>', 
-                commands_content)
+                copy_content)
         self.template_content = newcontent
 
         self._write_file('debian/rules', 0755)
+
+        # write debian/install file
+        install_file = open(config['source_path'] + '/debian/install', 'w')
+        install_file.write('\n'.join(self.dhinstall_list))
+        install_file.close()
 
         # write debian/dirs file
         dirs_file = open(config['source_path'] + '/debian/dirs', 'w')
@@ -277,10 +280,7 @@ class RulesGenerator(FileGenerator):
 	    # If we aren't working with config files or we are working with them but has the appropiate
 	    # extension fill the command
         if not ('gcs/conffiles_skel/' in orig_path) or orig_path.endswith(config['config_extension']):
-            exclude_arg = ''
-            if os.path.isdir(orig_path + '/.svn'):
-                exclude_arg = '--exclude=.svn'
-            command = '\tdh_install %s "%s" "%s"' % (exclude_arg, orig_path, dest_path)
+            command = orig_path + " " + dest_path
 
         if command:
             self.dhinstall_list.append(command)
