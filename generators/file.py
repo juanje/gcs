@@ -3,7 +3,6 @@
 
 import os
 import shutil
-import os.path
 import re
 import datetime
 import email.Utils
@@ -39,12 +38,19 @@ class FileGenerator(object):
             print "Can't create template content. Template: %s" % template_name
 
 
+    def _copy_file(self, orig_path, dest_path, mode=0644):
+        real_orig_path = config['source_path'] + '/' + orig_path
+        real_dest_path = config['source_path'] + '/' + dest_path
+        shutil.copy(real_orig_path, real_dest_path)
+        os.chmod(real_dest_path, mode)
+
     
     def _write_file(self, path, mode=0644):
-        real_file = open(config['source_path'] + '/' + path, 'w')
+        real_path = config['source_path'] + '/' + path
+        real_file = open(real_path, 'w')
         real_file.write(self.template_content)
         real_file.close()
-        os.chmod(config['source_path'] + '/' + path, mode)
+        os.chmod(real_path, mode)
 
 
 class ControlGenerator(FileGenerator):
@@ -78,7 +84,8 @@ class ControlGenerator(FileGenerator):
 
 
     def __set_name(self):
-        newcontent = self.template_content.replace('<NAME>', config['info']['name'])
+        name = config['info']['name']
+        newcontent = self.template_content.replace('<NAME>', name)
         self.template_content = newcontent
 
 
@@ -302,7 +309,7 @@ class ChangelogGenerator(FileGenerator):
             self.actual_content = open(config['source_path'] + \
                 '/gcs/changelog').read()
             self.changelog_exists = True
-        except:
+        except Exception:
             self.actual_content = ''
             self.changelog_exists = False
 
@@ -310,7 +317,6 @@ class ChangelogGenerator(FileGenerator):
 
 
     def activate(self):
-        debchangelog_path = config['source_path'] + '/debian/changelog'
         if self.__is_new_version():
             self.set_template_content('changelog_template')
 
@@ -320,9 +326,8 @@ class ChangelogGenerator(FileGenerator):
             self.template_content += '\n\n' + self.actual_content
             self._write_file('gcs/changelog')
             self._write_file('debian/changelog')
-        elif self.changelog_exists and (not os.path.exists(debchangelog_path)):
-            orig_changelog_path = config['source_path'] + '/gcs/changelog'
-            shutil.copy(orig_changelog_path, debchangelog_path)
+        elif self.changelog_exists:
+            self._copy_file('gcs/changelog', 'debian/changelog')
 
 
     def __set_basic_info(self):
