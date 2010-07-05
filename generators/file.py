@@ -89,43 +89,43 @@ class ControlGenerator(FileGenerator):
 
 
     def __set_predepends(self):
-        predepends = self.__parse_deps('/gcs/predepends')
+        predepends = self.__parse_list('/gcs/predepends')
         newcontent = self.template_content.replace('<PREDEPENDS>', predepends)
         self.template_content = newcontent
 
 
     def __set_depends(self):
-        depends = self.__parse_deps('/gcs/depends')
+        depends = self.__parse_list('/gcs/depends')
         newcontent = self.template_content.replace('<DEPENDS>', depends)
         self.template_content = newcontent
 
 
     def __set_recommends(self):
-        recommends = self.__parse_deps('/gcs/recommends')
+        recommends = self.__parse_list('/gcs/recommends')
         newcontent = self.template_content.replace('<RECOMMENDS>', recommends)
         self.template_content = newcontent
 
 
     def __set_suggests(self):
-        suggests = self.__parse_deps('/gcs/suggests')
+        suggests = self.__parse_list('/gcs/suggests')
         newcontent = self.template_content.replace('<SUGGESTS>', suggests)
         self.template_content = newcontent
 
 
     def __set_conflicts(self):
-        conflicts = self.__parse_deps('/gcs/conflicts')
+        conflicts = self.__parse_list('/gcs/conflicts')
         newcontent = self.template_content.replace('<CONFLICTS>', conflicts)
         self.template_content = newcontent
 
 
     def __set_replaces(self):
-        replaces = self.__parse_deps('/gcs/replaces')
+        replaces = self.__parse_list('/gcs/replaces')
         newcontent = self.template_content.replace('<REPLACES>', replaces)
         self.template_content = newcontent
 
 
     def __set_provides(self):
-        provides = self.__parse_deps('/gcs/provides')
+        provides = self.__parse_list('/gcs/provides')
         newcontent = self.template_content.replace('<PROVIDES>', provides)
         self.template_content = newcontent
 
@@ -147,29 +147,29 @@ class ControlGenerator(FileGenerator):
         newcontent = newcontent.replace('<LONGDESC>', longdesc)
         self.template_content = newcontent
 
-    def __parse_deps(self, file):
+    def __parse_list(self, file):
         try:
-            depends_list = open(config['source_path'] + file).readlines()
+            items_list = open(config['source_path'] + file).readlines()
         except IOError:
-            #print "No existe el fichero gcs/predepends"
+            #print "No existe el fichero %s" % file
             return ''
     
-        new_depends = []
-        for depend in depends_list:
-            depend = depend.strip()
-            if not depend or depend.startswith('#'):
+        new_items = []
+        for item in items_list:
+            item = item.strip()
+            if not item or item.startswith('#'):
                 continue
-            name_and_version = depend.split()
+            name_and_version = item.split()
 
-            depend_string = name_and_version[0]
+            item_string = name_and_version[0]
             if len(name_and_version) == 2:
                 version = name_and_version[1].lstrip("(").rstrip(")")
-                depend_string += " (%s)" % version
+                item_string += " (%s)" % version
 
-            new_depends.append(depend_string)
+            new_items.append(item_string)
 
-        depends = ', '.join(new_depends)
-        return depends
+        items = ', '.join(new_items)
+        return items
 
 
 
