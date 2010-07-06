@@ -17,6 +17,8 @@ from generators.file import PostInstGenerator
 from generators.file import PreRmGenerator
 from generators.file import PostRmGenerator
 from generators.file import CompatGenerator
+from generators.file import ConfigGenerator
+from generators.file import TemplatesGenerator
 from generators.file import CopyrightGenerator
 
 
@@ -37,7 +39,7 @@ class Builder(object):
         """
         try:
             os.mkdir(config['source_path'] + '/debian')
-        except:
+        except OSError:
             pass
 
         self.__prepare_conffiles()
@@ -51,6 +53,8 @@ class Builder(object):
         PreRmGenerator().activate()
         PostRmGenerator().activate()
         CompatGenerator().activate()
+        ConfigGenerator().activate()
+        TemplatesGenerator().activate()
         CopyrightGenerator().activate()
 
         # FIXME: At the moment we need to keep the configuration files because

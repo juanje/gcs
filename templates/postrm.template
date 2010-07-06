@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/bash -e
 
 #DEBHELPER#
+
+<DEBCONF_SLOT>
 
 <DIVERT_SLOT>
 

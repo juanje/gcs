@@ -391,13 +391,21 @@ class PrePostGenerator(FileGenerator):
         self.divert_content = ''
         self.scripts_path = ''
 
+        # Default DebConf slot for all derivated classes
+        self.debconf_content = '''
+## Source debconf library.
+. /usr/share/debconf/confmodule
+'''
+
 
     def activate(self):
         self.set_template_content(self.template_name)
         initial_content = self.template_content
+        initial_content = initial_content.replace('<DEBCONF_SLOT>', '')
         initial_content = initial_content.replace('<DIVERT_SLOT>', '')
         initial_content = initial_content.replace('<SCRIPTS_SLOT>', '')
         
+        self._set_debconf()
         self._set_divert()
         self._set_install_scripts()
 
@@ -408,6 +416,12 @@ class PrePostGenerator(FileGenerator):
                 os.remove(config['source_path'] + '/' + self.file_path)
             except:
                 pass
+
+
+    def _set_debconf(self):
+        newcontent = self.template_content.replace('<DEBCONF_SLOT>', 
+               self.debconf_content)
+        self.template_content = newcontent
 
 
     def _set_divert(self):
@@ -470,6 +484,12 @@ class PostRmGenerator(PrePostGenerator):
         self.template_name = 'postrm_template'
         self.file_path = 'debian/postrm'
         self.scripts_path = 'gcs/remove_scripts/pos/'
+        self.debconf_content += '''
+if [ "$1" = "purge" ]; then
+    # Remove my changes to the db.
+    db_purge
+fi
+'''
 
 
 
@@ -478,6 +498,73 @@ class CompatGenerator(FileGenerator):
     def activate(self):
         self.set_template_content('compat_template')
         self._write_file('debian/compat')
+
+
+
+class ConfigGenerator(FileGenerator):
+    """ Generate debian/config file from configuration, if it exists
+    """
+    def __init__(self):
+        self.dbinput_list = []
+        FileGenerator.__init__(self)
+
+    def __set_debconf_questions(self):
+        for question in config['questions']:
+            self.dbinput_list.append('db_input critical %s || true' % question['Template'])
+        dbinput_content = '\n'.join(self.dbinput_list)
+        newcontent = self.template_content.replace('<DBINPUT_SLOT>', dbinput_content)
+        self.template_content = newcontent
+
+    def activate(self):
+        """ Generate debian/config file
+
+        Steps:
+
+        1) Obtain control template
+        2) Set template content from configuration.
+        3) Write debian/config file
+        """
+        self.set_template_content('config_template')
+        initial_content = self.template_content
+        initial_content = initial_content.replace('<DBINPUT_SLOT>', '')
+        
+        # Allow custom configuration scripts
+        if os.path.exists(config['source_path'] + '/gcs/install_scripts/config'):
+            self._copy_file('gcs/install_scripts/config', 'debian/config', 0755)
+            pass
+
+        self.__set_debconf_questions()
+
+        if initial_content != self.template_content:
+            self._write_file('debian/config')
+        else:
+            try:
+                os.remove(config['source_path'] + '/config')
+            except:
+                pass
+
+
+class TemplatesGenerator(FileGenerator):
+    """ Generate debian/templates file
+    """
+    def __init__(self):
+        FileGenerator.__init__(self)
+        self.template_keys = ( 'Template', 'Type', 'Description' )
+
+
+    def _gen_template_content(self):
+        for question in config['questions']:
+            for key in self.template_keys: 
+                value = question[key].replace("\n", "\n  ")
+                value = re.sub(r'\n  $', '', value)
+                self.template_content += key + ': ' + value + "\n"
+            self.template_content += "\n"
+
+
+    def activate(self):
+        self._gen_template_content()
+
+        self._write_file('debian/templates')
 
 
 
