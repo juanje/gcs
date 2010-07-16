@@ -562,9 +562,17 @@ class TemplatesGenerator(FileGenerator):
 
 
     def activate(self):
+        initial_content = self.template_content
+
         self._gen_template_content()
 
-        self._write_file('debian/templates')
+        if initial_content != self.template_content:
+            self._write_file('debian/templates')
+        else:
+            try:
+                os.remove(config['source_path'] + '/templates')
+            except:
+                pass
 
 
 
