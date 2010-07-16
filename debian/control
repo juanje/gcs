@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Junta de Andalucia <packmaster@guadalinex.org>
 Uploaders: Juanje Ojeda Croissier <jojeda@emergya.es>
 Build-Depends: debhelper (>= 7.0)
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Homepage: http://launchpad.net/gcs
 Vcs-Browser: http://codebrowse.launchpad.net/~guadalinex-members/gcs/trunk/changes
 Vcs-Bzr: http://bazaar.launchpad.net/~guadalinex-members/gcs/trunk
