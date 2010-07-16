@@ -10,7 +10,7 @@ Architecture: all
 Provides: <PROVIDES>
 Replaces: <REPLACES>
 Pre-Depends: ${misc:Depends}, <PREDEPENDS>
-Depends: ${misc:Depends}, <DEPENDS>
+Depends: <DEPENDS>
 Recommends: <RECOMMENDS>
 Suggests: <SUGGESTS>
 Conflicts: <CONFLICTS>
