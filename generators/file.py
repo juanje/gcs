@@ -38,15 +38,23 @@ class FileGenerator(object):
             print "Can't create template content. Template: %s" % template_name
 
 
-    def _copy_file(self, orig_path, dest_path, mode=0644):
+    def _copy_file(self, orig_path, dest_path, mode=0644, dirmode=750):
         real_orig_path = config['source_path'] + '/' + orig_path
         real_dest_path = config['source_path'] + '/' + dest_path
+        try:
+            os.makedirs(os.dirname(real_dest_path), dirmode)
+        except: OSError
+            pass
         shutil.copy(real_orig_path, real_dest_path)
         os.chmod(real_dest_path, mode)
 
     
-    def _write_file(self, path, mode=0644):
+    def _write_file(self, path, mode=0644, dirmode=750):
         real_path = config['source_path'] + '/' + path
+        try:
+            os.makedirs(os.dirname(real_path), dirmode)
+        except: OSError
+            pass
         real_file = open(real_path, 'w')
         real_file.write(self.template_content)
         real_file.close()
@@ -498,6 +506,14 @@ class CompatGenerator(FileGenerator):
     def activate(self):
         self.set_template_content('compat_template')
         self._write_file('debian/compat')
+
+
+
+class SourceFormatGenerator(FileGenerator):
+
+    def activate(self):
+        self.set_template_content('sourceformat_template')
+        self._write_file('debian/source/format')
 
 
 

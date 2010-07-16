@@ -9,8 +9,9 @@ gcs (0.3.20+ehbello2) UNRELEASED; urgency=low
     of the packages using DebConf.
   * Fixed some lintian warnings in GCS templates:
       - maintainer-script-without-set-e
+      - missing-debian-source-format
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Fri, 16 Jul 2010 14:34:23 +0100
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Fri, 16 Jul 2010 14:37:40 +0100
 
 gcs (0.3.20+ehbello1) karmic; urgency=low
 
