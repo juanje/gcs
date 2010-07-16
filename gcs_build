@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser.add_option('-S', '--sources',
             dest="sources",
             action="store_true",
-            help="debian source only, no binary files"
+            help="debian source only, don't build binary files"
             )
     (options, args) = parser.parse_args()
 
