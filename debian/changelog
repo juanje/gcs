@@ -7,8 +7,10 @@ gcs (0.3.20+ehbello2) UNRELEASED; urgency=low
     in target packages.
   * Added preliminary support for adding questions during install proccess
     of the packages using DebConf.
+  * Fixed some lintian warnings in GCS templates:
+      - maintainer-script-without-set-e
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Tue, 06 Jul 2010 13:36:11 +0100
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Fri, 16 Jul 2010 14:34:23 +0100
 
 gcs (0.3.20+ehbello1) karmic; urgency=low
 
