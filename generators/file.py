@@ -38,7 +38,7 @@ class FileGenerator(object):
             print "Can't create template content. Template: %s" % template_name
 
 
-    def _copy_file(self, orig_path, dest_path, mode=0644, dirmode=750):
+    def _copy_file(self, orig_path, dest_path, mode=0644, dirmode=0755):
         real_orig_path = config['source_path'] + '/' + orig_path
         real_dest_path = config['source_path'] + '/' + dest_path
         try:
@@ -49,7 +49,7 @@ class FileGenerator(object):
         os.chmod(real_dest_path, mode)
 
     
-    def _write_file(self, path, mode=0644, dirmode=750):
+    def _write_file(self, path, mode=0644, dirmode=0755):
         real_path = config['source_path'] + '/' + path
         try:
             os.makedirs(os.path.dirname(real_path), dirmode)
