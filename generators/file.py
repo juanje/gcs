@@ -427,6 +427,9 @@ class PrePostGenerator(FileGenerator):
 
 
     def _set_debconf(self):
+        if not config['questions']:
+            self.debconf_content = ''
+
         newcontent = self.template_content.replace('<DEBCONF_SLOT>', 
                self.debconf_content)
         self.template_content = newcontent
