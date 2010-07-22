@@ -17,6 +17,7 @@ from generators.file import PostInstGenerator
 from generators.file import PreRmGenerator
 from generators.file import PostRmGenerator
 from generators.file import CompatGenerator
+from generators.file import SourceFormatGenerator
 from generators.file import ConfigGenerator
 from generators.file import TemplatesGenerator
 from generators.file import CopyrightGenerator
@@ -53,6 +54,7 @@ class Builder(object):
         PreRmGenerator().activate()
         PostRmGenerator().activate()
         CompatGenerator().activate()
+        SourceFormatGenerator().activate()
         ConfigGenerator().activate()
         TemplatesGenerator().activate()
         CopyrightGenerator().activate()
