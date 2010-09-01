@@ -1,4 +1,4 @@
-gcs (0.3.20+ehbello2) UNRELEASED; urgency=low
+gcs (0.3.20+ehbello2) lucid; urgency=low
 
   * Allows reading package lists with brackets in their versions, e.g.:
     gcs (> 0.3.20)
