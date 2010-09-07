@@ -164,27 +164,53 @@ class ControlGenerator(FileGenerator):
 
     def __parse_list(self, file):
         try:
-            items_list = open(config['source_path'] + file).readlines()
+            input_list = open(config['source_path'] + file).readlines()
         except IOError:
             #print "No existe el fichero %s" % file
             return ''
+
+        # TODO: Improve this pseudo syntax check
+        p = re.compile(r"""
+        (?P<name>
+            .*
+        )
+        [ ]*
+        (?P<version>
+            [(]?
+            [<>=]+[ ]*.+
+            [)]?
+        )?
+        """, re.VERBOSE)
     
-        new_items = []
-        for item in items_list:
-            item = item.strip()
-            if not item or item.startswith('#'):
+        output_list = []
+        for line in input_list:
+            line = line.strip()
+            if not line or line.startswith('#'):
                 continue
-            name_and_version = item.split()
 
-            item_string = name_and_version[0]
-            if len(name_and_version) == 2:
-                version = name_and_version[1].lstrip("(").rstrip(")")
-                item_string += " (%s)" % version
+            output_items = []
+            items_list = line.split('|')
 
-            new_items.append(item_string)
+            for item in items_list:
+                m = p.match(item)
+                name = m.group('name')
+                version = m.group('version')
 
-        items = ', '.join(new_items)
-        return items
+                if not name:
+                    print "Error parsing %s" % file
+                    sys.exit(1)
+
+                item_string = name
+                if version:
+                    item_string += " (%s)" % version.strip('()')
+
+                output_items.append(item_string)
+
+            line_string = '| '.join(output_items)
+            output_list.append(line_string)
+
+        output_string = ', '.join(output_list)
+        return output_string
 
 
 

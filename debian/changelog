@@ -1,3 +1,10 @@
+gcs (0.3.20+ehbello3) UNRELEASED; urgency=low
+
+  * Added a pseudo syntax check for package lists used in Debian control files.
+    Now supports packages with version and multiple dependences.
+
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Tue, 07 Sep 2010 15:21:17 +0100
+
 gcs (0.3.20+ehbello2) lucid; urgency=low
 
   * Allows reading package lists with brackets in their versions, e.g.:
