@@ -4,8 +4,10 @@ gcs (0.3.20+ehbello3) UNRELEASED; urgency=low
     Now supports packages with version and multiple dependences.
   * Added support to create softlinks files using dh_link instead of copying
     them.
+  * Fixed the first template question of example skel removing non valid
+    tabulators.
 
- -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 25 Sep 2010 23:21:27 +0100
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 25 Sep 2010 23:42:53 +0100
 
 gcs (0.3.20+ehbello2) lucid; urgency=low
 
