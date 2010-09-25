@@ -222,9 +222,9 @@ class RulesGenerator(FileGenerator):
     """
 
     def __init__(self):
-        self.dhinstall_list = []
-        self.copy_list = []
-        self.dirs = []
+        self.install_list = []
+        self.links_list = []
+        self.dirs_list = []
         FileGenerator.__init__(self)
 
 
@@ -249,7 +249,7 @@ class RulesGenerator(FileGenerator):
                 if (len(line_tuple) != 2) or line.startswith('#'):
                     continue
     
-                self.__add_dhinstall(*line_tuple)
+                self.__add_install(*line_tuple)
 
 
     def __process_skel(self, skel_name):
@@ -266,47 +266,54 @@ class RulesGenerator(FileGenerator):
             if not '/.svn' in dirname:
                 dir_to_add = dirname[dest_stuff_len - 1:]
                 if dir_to_add:
-                    self.dirs.append(dirname[dest_stuff_len - 1:])    
+                    self.dirs_list.append(dirname[dest_stuff_len - 1:])    
 
             for fname in file_names:
                 base_path = dirname + os.sep + fname
                 orig_path = base_path[orig_stuff_len:]
                 dest_path = base_path[dest_stuff_len:]
 
-                if (not '/.svn' in orig_path) and\
-                        os.path.isfile(orig_path):
+                if ('/.svn' in orig_path):
+                    continue
+
+                if os.path.islink(orig_path):
+                    orig_path = os.readlink(base_path)
+                    self.__add_link(orig_path, dest_path)
+                elif os.path.isfile(orig_path):
                     dest_path = os.path.dirname(dest_path)
                     if skel_name == "conffiles_skel":
                         dest_path = os.path.join(config['diverts_basepath'], dest_path)
-                    self.__add_dhinstall(orig_path, dest_path)
-                elif os.path.islink(orig_path):
-                    dest_path = os.path.dirname(dest_path)
-                    self.__add_copy(orig_path, dest_path)
+                    self.__add_install(orig_path, dest_path)
 
         os.path.walk(config['source_path'] + '/gcs/' + skel_name, 
                 set_dhinstall, None)
 
 
     def __write_rules_file(self):
-        copy_content = '\n'.join(self.copy_list)
+        dhinstall_content = ''
         newcontent = self.template_content.replace('<DHINSTALL_SLOT>', 
-                copy_content)
+                dhinstall_content)
         self.template_content = newcontent
 
         self._write_file('debian/rules', 0755)
 
         # write debian/install file
         install_file = open(config['source_path'] + '/debian/install', 'w')
-        install_file.write('\n'.join(self.dhinstall_list))
+        install_file.write('\n'.join(self.install_list))
         install_file.close()
 
         # write debian/dirs file
         dirs_file = open(config['source_path'] + '/debian/dirs', 'w')
-        dirs_file.write('\n'.join(self.dirs))
+        dirs_file.write('\n'.join(self.dirs_list))
         dirs_file.close()
 
+        # write debian/links file
+        links_file = open(config['source_path'] + '/debian/links', 'w')
+        links_file.write('\n'.join(self.links_list))
+        links_file.close()
 
-    def __add_dhinstall(self, orig_path, dest_path):
+
+    def __add_install(self, orig_path, dest_path):
         if not dest_path:
             return
         #dest_path = os.path.dirname(dest_path)
@@ -317,7 +324,21 @@ class RulesGenerator(FileGenerator):
             command = orig_path + " " + dest_path
 
         if command:
-            self.dhinstall_list.append(command)
+            self.install_list.append(command)
+
+
+    def __add_link(self, orig_path, dest_path):
+        if not dest_path:
+            return
+        #dest_path = os.path.dirname(dest_path)
+        command = ''
+	    # If we aren't working with config files or we are working with them but has the appropiate
+	    # extension fill the command
+        if not ('gcs/conffiles_skel/' in orig_path) or orig_path.endswith(config['config_extension']):
+            command = orig_path + " " + dest_path
+
+        if command:
+            self.links_list.append(command)
 
 
     def __add_copy(self, orig_path, dest_path):
