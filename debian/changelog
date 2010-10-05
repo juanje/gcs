@@ -1,8 +1,53 @@
-gcs (0.3.21) lucid; urgency=low
+gcs (0.3.20+ehbello3) UNRELEASED; urgency=low
 
-  * Added Provides: control's field support
+  * Added a pseudo syntax check for package lists used in Debian control files.
+    Now supports packages with version and multiple dependences.
+  * Added support to create softlinks files using dh_link instead of copying
+    them.
+  * Fixed the first template question of example skel removing non valid
+    tabulators.
 
- -- Roberto C. Morano <rcmorano@emergya.es>  Mon, 5 Apr 2010 10:11:55 +0200
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Sat, 25 Sep 2010 23:42:53 +0100
+
+gcs (0.3.20+ehbello2) lucid; urgency=low
+
+  * Allows reading package lists with brackets in their versions, e.g.:
+    gcs (> 0.3.20)
+  * Fixed bug when divert a file due to a variable not defined.
+  * Added support for debian install file to get a more readable rules file
+    in target packages.
+  * Added preliminary support for adding questions during install proccess
+    of the packages using DebConf.
+  * Fixed some lintian warnings in GCS templates:
+      - maintainer-script-without-set-e
+      - missing-debian-source-format
+      - out-of-date-standards-version
+  * Added initial manpages for gcs commands.
+
+ -- Enrique Hernández Bello <quique@osl.ull.es>  Fri, 16 Jul 2010 16:56:34 +0100
+
+gcs (0.3.20+ehbello1) karmic; urgency=low
+
+  * Added support for all architectures.
+  * Added preremoval script to delete all remaining pyc files for a clean
+    uninstall.
+  * Added support for Recommends and Suggests control fields.
+    preparation process is no longer necessary.
+  * Changed default config_extension to .gcs
+  * Added an option parameter for gcs_build to don't build the Debian source
+    generated. It's useful to build it later.
+  * Created <DISTRIB> tag with the codename of the parent distribution for the
+    changelog template.
+  * Added support for <AUTHOR> tag in copyright template.
+  * Deleted some old stuff.
+  * Replaced python-syck dependence by a newer python-yaml.
+  * The example section in the info file of the skeleton by default couldn't
+    have multiple words.
+  * Fixed almost all lintian warnings coming from this debian package and the
+    debian templates for gcs.
+  * Added feature to change the base directory of diverted files. Useful for a
+    run-parts style of directory. [config: diverts_basepath]
+  * Removed execution permission to the templates and gave them later to the
 
 gcs (0.3.20) jaunty; urgency=low
 

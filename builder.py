@@ -5,7 +5,7 @@ import os
 import os.path
 import shutil
 
-import syck
+import yaml
 
 from config import config
 from generators.file import ControlGenerator
@@ -17,6 +17,9 @@ from generators.file import PostInstGenerator
 from generators.file import PreRmGenerator
 from generators.file import PostRmGenerator
 from generators.file import CompatGenerator
+from generators.file import SourceFormatGenerator
+from generators.file import ConfigGenerator
+from generators.file import TemplatesGenerator
 from generators.file import CopyrightGenerator
 
 
@@ -26,7 +29,7 @@ class Builder(object):
 
     def __init__(self, path):
         config['source_path'] = path
-        config['info'] = syck.load(open(path + '/gcs/info').read())
+        config['info'] = yaml.load(open(path + '/gcs/info').read())
         extension = config['info'].get('config_extension', None)
         if extension:
             config['config_extension'] = extension
@@ -37,7 +40,7 @@ class Builder(object):
         """
         try:
             os.mkdir(config['source_path'] + '/debian')
-        except:
+        except OSError:
             pass
 
         self.__prepare_conffiles()
@@ -51,17 +54,29 @@ class Builder(object):
         PreRmGenerator().activate()
         PostRmGenerator().activate()
         CompatGenerator().activate()
+        SourceFormatGenerator().activate()
+        ConfigGenerator().activate()
+        TemplatesGenerator().activate()
         CopyrightGenerator().activate()
 
-        os.system('debuild -us -uc')
+        # FIXME: At the moment we need to keep the configuration files because
+        # the conversion doesn't transparently (dh_install rename problem)
+        #self.__delete_tmpfiles()
 
-        self.__delete_tmpfiles()
 
 
+
+    def build_package(self):
+        """ Build the package. Use a simply debuild for this propouse.
+        """
+        try:
+            os.system('debuild -us -uc')
+        except:
+            pass
 
 
     def __prepare_conffiles(self):
-        """ Add .gv4 extension at all conffiles (making a copy)
+        """ Add .gcs extension at all conffiles (making a copy)
         """
         def copy_file(arg, dirname, file_names):
 
@@ -79,7 +94,7 @@ class Builder(object):
 
 
     def __delete_tmpfiles(self):
-        """ Add .gv4 extension at all conffiles (making a copy)
+        """ Add .gcs extension at all conffiles (making a copy)
         """
         def delete_file(arg, dirname, file_names):
 

@@ -7,8 +7,21 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 sys.path.insert(0, '/usr/share/gcs/')
 
+from optparse import OptionParser
 from builder import Builder
 
 if __name__ == "__main__":
+    parser = OptionParser()
+
+    parser.add_option('-S', '--sources',
+            dest="sources",
+            action="store_true",
+            help="debian source only, don't build binary files"
+            )
+    (options, args) = parser.parse_args()
+
     builder = Builder(os.getcwd())
     builder.make_package()
+
+    if not options.sources:
+        builder.build_package()

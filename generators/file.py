@@ -3,7 +3,6 @@
 
 import os
 import shutil
-import os.path
 import re
 import datetime
 import email.Utils
@@ -39,11 +38,27 @@ class FileGenerator(object):
             print "Can't create template content. Template: %s" % template_name
 
 
+    def _copy_file(self, orig_path, dest_path, mode=0644, dirmode=0755):
+        real_orig_path = config['source_path'] + '/' + orig_path
+        real_dest_path = config['source_path'] + '/' + dest_path
+        try:
+            os.makedirs(os.path.dirname(real_dest_path), dirmode)
+        except OSError:
+            pass
+        shutil.copy(real_orig_path, real_dest_path)
+        os.chmod(real_dest_path, mode)
+
     
-    def _write_file(self, path):
-        real_file = open(config['source_path'] + '/' + path, 'w')
+    def _write_file(self, path, mode=0644, dirmode=0755):
+        real_path = config['source_path'] + '/' + path
+        try:
+            os.makedirs(os.path.dirname(real_path), dirmode)
+        except OSError:
+            pass
+        real_file = open(real_path, 'w')
         real_file.write(self.template_content)
         real_file.close()
+        os.chmod(real_path, mode)
 
 
 class ControlGenerator(FileGenerator):
@@ -65,6 +80,8 @@ class ControlGenerator(FileGenerator):
         self.__set_predepends()
         self.__set_provides()
         self.__set_depends()
+        self.__set_recommends()
+        self.__set_suggests()
         self.__set_conflicts()
         self.__set_replaces()
         self.__set_section()
@@ -75,7 +92,8 @@ class ControlGenerator(FileGenerator):
 
 
     def __set_name(self):
-        newcontent = self.template_content.replace('<NAME>', config['info']['name'])
+        name = config['info']['name']
+        newcontent = self.template_content.replace('<NAME>', name)
         self.template_content = newcontent
 
 
@@ -86,31 +104,43 @@ class ControlGenerator(FileGenerator):
 
 
     def __set_predepends(self):
-        predepends = self.__parse_deps('/gcs/predepends')
+        predepends = self.__parse_list('/gcs/predepends')
         newcontent = self.template_content.replace('<PREDEPENDS>', predepends)
         self.template_content = newcontent
 
 
     def __set_depends(self):
-        depends = self.__parse_deps('/gcs/depends')
+        depends = self.__parse_list('/gcs/depends')
         newcontent = self.template_content.replace('<DEPENDS>', depends)
         self.template_content = newcontent
 
 
+    def __set_recommends(self):
+        recommends = self.__parse_list('/gcs/recommends')
+        newcontent = self.template_content.replace('<RECOMMENDS>', recommends)
+        self.template_content = newcontent
+
+
+    def __set_suggests(self):
+        suggests = self.__parse_list('/gcs/suggests')
+        newcontent = self.template_content.replace('<SUGGESTS>', suggests)
+        self.template_content = newcontent
+
+
     def __set_conflicts(self):
-        conflicts = self.__parse_deps('/gcs/conflicts')
+        conflicts = self.__parse_list('/gcs/conflicts')
         newcontent = self.template_content.replace('<CONFLICTS>', conflicts)
         self.template_content = newcontent
 
 
     def __set_replaces(self):
-        replaces = self.__parse_deps('/gcs/replaces')
+        replaces = self.__parse_list('/gcs/replaces')
         newcontent = self.template_content.replace('<REPLACES>', replaces)
         self.template_content = newcontent
 
 
     def __set_provides(self):
-        provides = self.__parse_deps('/gcs/provides')
+        provides = self.__parse_list('/gcs/provides')
         newcontent = self.template_content.replace('<PROVIDES>', provides)
         self.template_content = newcontent
 
@@ -132,28 +162,55 @@ class ControlGenerator(FileGenerator):
         newcontent = newcontent.replace('<LONGDESC>', longdesc)
         self.template_content = newcontent
 
-    def __parse_deps(self, file):
+    def __parse_list(self, file):
         try:
-            depends_list = open(config['source_path'] + file).readlines()
+            input_list = open(config['source_path'] + file).readlines()
         except IOError:
-            #print "No existe el fichero gcs/predepends"
+            #print "No existe el fichero %s" % file
             return ''
+
+        # TODO: Improve this pseudo syntax check
+        p = re.compile(r"""
+        (?P<name>
+            .*
+        )
+        [ ]*
+        (?P<version>
+            [(]?
+            [<>=]+[ ]*.+
+            [)]?
+        )?
+        """, re.VERBOSE)
     
-        new_depends = []
-        for depend in depends_list:
-            depend = depend.strip()
-            if not depend or depend.startswith('#'):
+        output_list = []
+        for line in input_list:
+            line = line.strip()
+            if not line or line.startswith('#'):
                 continue
-            name_and_version = depend.split()
 
-            depend_string = name_and_version[0]
-            if len(name_and_version) == 2:
-                depend_string += " (%s)" %(name_and_version[1])
+            output_items = []
+            items_list = line.split('|')
 
-            new_depends.append(depend_string)
+            for item in items_list:
+                m = p.match(item)
+                name = m.group('name')
+                version = m.group('version')
 
-        depends = ', '.join(new_depends)
-        return depends
+                if not name:
+                    print "Error parsing %s" % file
+                    sys.exit(1)
+
+                item_string = name
+                if version:
+                    item_string += " (%s)" % version.strip('()')
+
+                output_items.append(item_string)
+
+            line_string = '| '.join(output_items)
+            output_list.append(line_string)
+
+        output_string = ', '.join(output_list)
+        return output_string
 
 
 
@@ -165,9 +222,9 @@ class RulesGenerator(FileGenerator):
     """
 
     def __init__(self):
-        self.dhinstall_list = []
-        self.copy_list = []
-        self.dirs = []
+        self.install_list = []
+        self.links_list = []
+        self.dirs_list = []
         FileGenerator.__init__(self)
 
 
@@ -192,7 +249,7 @@ class RulesGenerator(FileGenerator):
                 if (len(line_tuple) != 2) or line.startswith('#'):
                     continue
     
-                self.__add_dhinstall(*line_tuple)
+                self.__add_install(*line_tuple)
 
 
     def __process_skel(self, skel_name):
@@ -209,43 +266,54 @@ class RulesGenerator(FileGenerator):
             if not '/.svn' in dirname:
                 dir_to_add = dirname[dest_stuff_len - 1:]
                 if dir_to_add:
-                    self.dirs.append(dirname[dest_stuff_len - 1:])    
+                    self.dirs_list.append(dirname[dest_stuff_len - 1:])    
 
             for fname in file_names:
                 base_path = dirname + os.sep + fname
                 orig_path = base_path[orig_stuff_len:]
                 dest_path = base_path[dest_stuff_len:]
 
-                if (not '/.svn' in orig_path) and\
-                        os.path.isfile(orig_path):
+                if ('/.svn' in orig_path):
+                    continue
+
+                if os.path.islink(orig_path):
+                    orig_path = os.readlink(base_path)
+                    self.__add_link(orig_path, dest_path)
+                elif os.path.isfile(orig_path):
                     dest_path = os.path.dirname(dest_path)
-                    self.__add_dhinstall(orig_path, dest_path)
-                elif os.path.islink(orig_path):
-                    dest_path = os.path.dirname(dest_path)
-                    self.__add_copy(orig_path, dest_path)
+                    if skel_name == "conffiles_skel":
+                        dest_path = os.path.join(config['diverts_basepath'], dest_path)
+                    self.__add_install(orig_path, dest_path)
 
         os.path.walk(config['source_path'] + '/gcs/' + skel_name, 
                 set_dhinstall, None)
 
 
     def __write_rules_file(self):
-        dhinstall_content = '\n'.join(self.dhinstall_list)
-        copy_content = '\n'.join(self.copy_list)
-        commands_content = '\n'.join([dhinstall_content, copy_content])
+        dhinstall_content = ''
         newcontent = self.template_content.replace('<DHINSTALL_SLOT>', 
-                commands_content)
+                dhinstall_content)
         self.template_content = newcontent
 
-        self._write_file('debian/rules')
-        os.chmod(config['source_path'] + '/' + 'debian/rules', 0755)
+        self._write_file('debian/rules', 0755)
+
+        # write debian/install file
+        install_file = open(config['source_path'] + '/debian/install', 'w')
+        install_file.write('\n'.join(self.install_list))
+        install_file.close()
 
         # write debian/dirs file
         dirs_file = open(config['source_path'] + '/debian/dirs', 'w')
-        dirs_file.write('\n'.join(self.dirs))
+        dirs_file.write('\n'.join(self.dirs_list))
         dirs_file.close()
 
+        # write debian/links file
+        links_file = open(config['source_path'] + '/debian/links', 'w')
+        links_file.write('\n'.join(self.links_list))
+        links_file.close()
 
-    def __add_dhinstall(self, orig_path, dest_path):
+
+    def __add_install(self, orig_path, dest_path):
         if not dest_path:
             return
         #dest_path = os.path.dirname(dest_path)
@@ -253,13 +321,24 @@ class RulesGenerator(FileGenerator):
 	    # If we aren't working with config files or we are working with them but has the appropiate
 	    # extension fill the command
         if not ('gcs/conffiles_skel/' in orig_path) or orig_path.endswith(config['config_extension']):
-            exclude_arg = ''
-            if os.path.isdir(orig_path + '/.svn'):
-                exclude_arg = '--exclude=.svn'
-            command = '\tdh_install %s "%s" "%s"' % (exclude_arg, orig_path, dest_path)
+            command = orig_path + " " + dest_path
 
         if command:
-            self.dhinstall_list.append(command)
+            self.install_list.append(command)
+
+
+    def __add_link(self, orig_path, dest_path):
+        if not dest_path:
+            return
+        #dest_path = os.path.dirname(dest_path)
+        command = ''
+	    # If we aren't working with config files or we are working with them but has the appropiate
+	    # extension fill the command
+        if not ('gcs/conffiles_skel/' in orig_path) or orig_path.endswith(config['config_extension']):
+            command = orig_path + " " + dest_path
+
+        if command:
+            self.links_list.append(command)
 
 
     def __add_copy(self, orig_path, dest_path):
@@ -285,7 +364,7 @@ class ChangelogGenerator(FileGenerator):
             self.actual_content = open(config['source_path'] + \
                 '/gcs/changelog').read()
             self.changelog_exists = True
-        except:
+        except Exception:
             self.actual_content = ''
             self.changelog_exists = False
 
@@ -293,7 +372,6 @@ class ChangelogGenerator(FileGenerator):
 
 
     def activate(self):
-        debchangelog_path = config['source_path'] + '/debian/changelog'
         if self.__is_new_version():
             self.set_template_content('changelog_template')
 
@@ -303,9 +381,8 @@ class ChangelogGenerator(FileGenerator):
             self.template_content += '\n\n' + self.actual_content
             self._write_file('gcs/changelog')
             self._write_file('debian/changelog')
-        elif self.changelog_exists and (not os.path.exists(debchangelog_path)):
-            orig_changelog_path = config['source_path'] + '/gcs/changelog'
-            shutil.copy(orig_changelog_path, debchangelog_path)
+        elif self.changelog_exists:
+            self._copy_file('gcs/changelog', 'debian/changelog')
 
 
     def __set_basic_info(self):
@@ -314,6 +391,8 @@ class ChangelogGenerator(FileGenerator):
                 info['name'])
         newcontent = newcontent.replace('<VERSION>', 
                 str(info['version']))
+        newcontent = newcontent.replace('<DISTRIB>', 
+                os.popen('lsb_release -cs').read()[:-1])
         newcontent = newcontent.replace('<AUTHOR>', 
                 info['author'])
         newcontent = newcontent.replace('<DATE>',
@@ -367,23 +446,40 @@ class PrePostGenerator(FileGenerator):
         self.divert_content = ''
         self.scripts_path = ''
 
+        # Default DebConf slot for all derivated classes
+        self.debconf_content = '''
+## Source debconf library.
+. /usr/share/debconf/confmodule
+'''
+
 
     def activate(self):
         self.set_template_content(self.template_name)
         initial_content = self.template_content
+        initial_content = initial_content.replace('<DEBCONF_SLOT>', '')
         initial_content = initial_content.replace('<DIVERT_SLOT>', '')
         initial_content = initial_content.replace('<SCRIPTS_SLOT>', '')
         
+        self._set_debconf()
         self._set_divert()
         self._set_install_scripts()
 
         if initial_content != self.template_content:
-            self._write_file(self.file_path)
+            self._write_file(self.file_path, 0755)
         else:
             try:
                 os.remove(config['source_path'] + '/' + self.file_path)
             except:
                 pass
+
+
+    def _set_debconf(self):
+        if not config['questions']:
+            self.debconf_content = ''
+
+        newcontent = self.template_content.replace('<DEBCONF_SLOT>', 
+               self.debconf_content)
+        self.template_content = newcontent
 
 
     def _set_divert(self):
@@ -446,6 +542,12 @@ class PostRmGenerator(PrePostGenerator):
         self.template_name = 'postrm_template'
         self.file_path = 'debian/postrm'
         self.scripts_path = 'gcs/remove_scripts/pos/'
+        self.debconf_content += '''
+if [ "$1" = "purge" ]; then
+    # Remove my changes to the db.
+    db_purge
+fi
+'''
 
 
 
@@ -457,8 +559,102 @@ class CompatGenerator(FileGenerator):
 
 
 
+class SourceFormatGenerator(FileGenerator):
+
+    def activate(self):
+        self.set_template_content('sourceformat_template')
+        self._write_file('debian/source/format')
+
+
+
+class ConfigGenerator(FileGenerator):
+    """ Generate debian/config file from configuration, if it exists
+    """
+    def __init__(self):
+        self.dbinput_list = []
+        FileGenerator.__init__(self)
+
+    def __set_debconf_questions(self):
+        for question in config['questions']:
+            self.dbinput_list.append('db_input critical %s || true' % question['Template'])
+        dbinput_content = '\n'.join(self.dbinput_list)
+        newcontent = self.template_content.replace('<DBINPUT_SLOT>', dbinput_content)
+        self.template_content = newcontent
+
+    def activate(self):
+        """ Generate debian/config file
+
+        Steps:
+
+        1) Obtain control template
+        2) Set template content from configuration.
+        3) Write debian/config file
+        """
+        self.set_template_content('config_template')
+        initial_content = self.template_content
+        initial_content = initial_content.replace('<DBINPUT_SLOT>', '')
+        
+        # Allow custom configuration scripts
+        if os.path.exists(config['source_path'] + '/gcs/install_scripts/config'):
+            self._copy_file('gcs/install_scripts/config', 'debian/config', 0755)
+            pass
+
+        self.__set_debconf_questions()
+
+        if initial_content != self.template_content:
+            self._write_file('debian/config')
+        else:
+            try:
+                os.remove(config['source_path'] + '/config')
+            except:
+                pass
+
+
+class TemplatesGenerator(FileGenerator):
+    """ Generate debian/templates file
+    """
+    def __init__(self):
+        FileGenerator.__init__(self)
+        self.template_keys = ( 'Template', 'Type', 'Description' )
+
+
+    def _gen_template_content(self):
+        for question in config['questions']:
+            for key in self.template_keys: 
+                value = question[key].replace("\n", "\n  ")
+                value = re.sub(r'\n  $', '', value)
+                self.template_content += key + ': ' + value + "\n"
+            self.template_content += "\n"
+
+
+    def activate(self):
+        initial_content = self.template_content
+
+        self._gen_template_content()
+
+        if initial_content != self.template_content:
+            self._write_file('debian/templates')
+        else:
+            try:
+                os.remove(config['source_path'] + '/templates')
+            except:
+                pass
+
+
+
 class CopyrightGenerator(FileGenerator):
 
     def activate(self):
         self.set_template_content('copyright_template')
+
+        self.__set_author()
+
         self._write_file('debian/copyright')
+
+
+    def __set_author(self):
+        from datetime import date
+        today = date.today()
+        author = "Copyright %s, %s" % (today.year, config['info']['author'])
+        newcontent = self.template_content.replace('<AUTHOR>', author)
+        self.template_content = newcontent

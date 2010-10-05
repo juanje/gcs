@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#DEBHELPER#
+
+set -e
+
+find /usr/share/gcs/ -iname "*.pyc" -delete
